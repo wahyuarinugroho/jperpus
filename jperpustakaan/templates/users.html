@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for message in messages %}
+                {% if message %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Data Users</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <h3>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Tambah</a>
+            </h3>
+            <div class="mt-3 mb-3">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="search" name="cari_user" placeholder="Search for..." class="form-control">
+                </form>
+            </div>
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Username</th>
+                        <th>Staff</th>
+                        <th>Superuser</th>
+                        <th>Date Joined</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.is_staff }}</td>
+                        <td>{{ user.is_superuser }}</td>
+                        <td>{{ user.date_joined }}</td>
+                        <td>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus-{{ user.id }}">Hapus</button>
+                        </td>
+                    </tr> 
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="hapus-{{ user.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title">Notification</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                            apakah anda yakin ingin menghapus <strong>{{ user.username | upper }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a href="{% url 'hapus_user' user.id %}"><button type="button" class="btn btn-primary">Hapus</button></a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock%}
